@@ -1,69 +1,51 @@
 <template>
   <div>
-    <h1>Create an event</h1>
+    <h1>Create an organization</h1>
     <form @submit.prevent="saveEvent">
-      <label>Category</label>
+      <label>Name</label>
       <input
-        v-model="event.category"
+        v-model="organizer.name"
         type="text"
-        placeholder="Category"
+        placeholder="Name"
         class="field"
       />
-      <h3>Name & describe your event</h3>
-      <label>Title</label>
+      <h3>Address</h3>
       <input
-        v-model="event.title"
+        v-model="organizer.address"
         type="text"
-        placeholder="Title"
-        class="field"
-      />
-      <label>Description</label>
-      <input
-        v-model="event.description"
-        type="text"
-        placeholder="Description"
-        class="field"
-      />
-      <h3>Where is your event?</h3>
-      <label>Location</label>
-      <input
-        v-model="event.location"
-        type="text"
-        placeholder="Location"
+        placeholder="Address"
         class="field"
       />
       <button type="submit">Submit</button>
     </form>
 
-    <pre>{{ event }}</pre>
+    <pre>{{ organizer }}</pre>
   </div>
 </template>
 
 <script>
-import EventService from '@/services/EventService.js'
+import OrganizerService from '@/services/OrganizerService'
 export default {
   inject: ['GStore'],
   data() {
     return {
-      event: {
-        category: '',
-        title: '',
-        description: '',
-        location: ''
+      organizer: {
+        name: '',
+        address: ''
       }
     }
   },
   methods: {
     saveEvent() {
-      EventService.saveEvent(this.event)
+      OrganizerService.saveEvent(this.organizer)
         .then((response) => {
           console.log(response)
           this.$router.push({
-            name: 'EventLayoutView',
+            name: 'OrganizerLayoutView',
             params: { id: response.data.id }
           })
           this.GStore.flashMessage =
-            'You have successfully add a new event for ' + response.data.title
+            'You have successfully add a new event for ' + response.data.name
           setTimeout(() => {
             this.GStore.flashMessage = ''
           }, 3000)

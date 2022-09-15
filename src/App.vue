@@ -3,9 +3,11 @@
     {{ GStore.flashMessage }}
   </div>
   <nav>
-    <router-link :to="{ name: 'EventList' }">Home</router-link> |
+    <router-link :to="{ name: 'EventList' }">EventList</router-link> |
+    <router-link :to="{ name: 'OrganizerList' }">OrganizerList</router-link> |
     <router-link :to="{ name: 'about' }">About</router-link> |
-    <router-link :to="{ name: 'AddEvent' }">New Event</router-link>
+    <router-link :to="{ name: 'AddEvent' }">New Event</router-link> |
+    <router-link :to="{ name: 'AddOrganizer' }">New Organization</router-link>
   </nav>
   <router-view />
 </template>

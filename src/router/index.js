@@ -11,12 +11,24 @@ import NProgress from 'nprogress'
 import GStore from '@/store'
 import EventService from '@/services/EventService'
 import AddEvent from '@/views/EventForm.vue'
+import OrganizerListView from '@/views/OrganizerListView.vue'
+import OrganizerService from '@/services/OrganizerService'
+import OrganizerLayoutView from '@/views/organizer/OrganizerLayoutView.vue'
+import OrganizerDetailView from '@/views/organizer/OrganizerDetailView.vue'
+import OrganizerEdit from '@/views/organizer/OrganizerEditView.vue'
+import AddOrganizer from '@/views/OrganizerForm.vue'
 
 const routes = [
   {
     path: '/',
     name: 'EventList',
     component: EventListView,
+    props: (route) => ({ page: parseInt(route.query.page) || 1 })
+  },
+  {
+    path: '/organizerList',
+    name: 'OrganizerList',
+    component: OrganizerListView,
     props: (route) => ({ page: parseInt(route.query.page) || 1 })
   },
   {
@@ -28,6 +40,11 @@ const routes = [
     path: '/add-event',
     name: 'AddEvent',
     component: AddEvent
+  },
+  {
+    path: '/add-organizer',
+    name: 'AddOrganizer',
+    component: AddOrganizer
   },
   {
     path: '/event/:id',
@@ -68,6 +85,42 @@ const routes = [
         name: 'EventEdit',
         props: true,
         component: EventEditView
+      }
+    ]
+  },
+  {
+    path: '/organizer/:id',
+    name: 'OrganizerLayoutView',
+    component: OrganizerLayoutView,
+    beforeEnter: (to) => {
+      return OrganizerService.getEvent(to.params.id)
+        .then((response) => {
+          GStore.organizer = response.data
+        })
+        .catch((error) => {
+          if (error.response && error.response.start == 404) {
+            return {
+              name: '404Resource',
+              params: { resource: 'organizer' }
+            }
+          } else {
+            return { name: 'NetworkError' }
+          }
+        })
+    },
+    props: true,
+    children: [
+      {
+        path: '',
+        name: 'OrganizerDetails',
+        component: OrganizerDetailView,
+        props: true
+      },
+      {
+        path: 'OrganizerEdit',
+        name: 'OrganizerEdit',
+        props: true,
+        component: OrganizerEdit
       }
     ]
   },
